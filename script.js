@@ -1,4 +1,5 @@
 let records = [];
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec";
 const tableBody = document.querySelector("#records-table tbody");
 const totalPayElem = document.getElementById("total-pay");
 const differenceMessage = document.getElementById("difference-message");
@@ -19,6 +20,15 @@ document.getElementById("add-entry").addEventListener("click", () => {
   const record = { date, hours, rate, expectedPay: parseFloat(expectedPay) };
   records.push(record);
   renderTable();
+  // Send to backend
+fetch(BACKEND_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(record)
+})
+.then(res => res.text())
+.then(msg => console.log("Backend:", msg))
+.catch(err => console.error("Error:", err));
 });
 
 function renderTable() {
@@ -82,3 +92,4 @@ function drawChart() {
     }
   });
 }
+
