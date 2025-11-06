@@ -1,13 +1,13 @@
 let records = [];
 
+let USER_EMAIL = null;
+
+// This is called after Google Sign-In
 function handleCredentialResponse(response) {
   const payload = parseJwt(response.credential);
-  console.log("Logged in as:", payload.email);
-  
+  USER_EMAIL = payload.email; // store email
   document.getElementById("login-section").classList.add("hidden");
   document.getElementById("tracker-section").classList.remove("hidden");
-  
-  window.USER_EMAIL = payload.email; // store for backend
 }
 
 function parseJwt(token) {
@@ -16,17 +16,30 @@ function parseJwt(token) {
   return JSON.parse(atob(base64));
 }
 
-window.onload = () => {
-  google.accounts.id.initialize({
-    client_id: "YOUR_CLIENT_ID_HERE",
-    callback: handleCredentialResponse
-  });
-  google.accounts.id.renderButton(
-    document.querySelector(".g_id_signin"),
-    { theme: "outline", size: "large" }
-  );
-  google.accounts.id.prompt(); // shows the One Tap prompt
-};
+// Add entry button
+document.getElementById("add-entry").addEventListener("click", () => {
+  if (!USER_EMAIL) {
+    alert("You must log in first!");
+    return;
+  }
+
+  const date = document.getElementById("work-date").value;
+  const hours = parseFloat(document.getElementById("work-hours").value);
+  const rate = parseFloat(document.getElementById("daily-rate").value);
+  const expectedPay = ((hours / 4.5) * rate).toFixed(2);
+
+  const record = { date, hours, rate, expectedPay, email: USER_EMAIL };
+
+  // Send JSON to Apps Script
+  fetch(BACKEND_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record)
+  })
+  .then(res => res.text())
+  .then(msg => console.log("Backend:", msg))
+  .catch(err => console.error("Error:", err));
+});
 
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec";
 const tableBody = document.querySelector("#records-table tbody");
@@ -121,5 +134,6 @@ function drawChart() {
     }
   });
 }
+
 
 
