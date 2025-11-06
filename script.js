@@ -1,4 +1,33 @@
 let records = [];
+
+function handleCredentialResponse(response) {
+  const payload = parseJwt(response.credential);
+  console.log("Logged in as:", payload.email);
+  
+  document.getElementById("login-section").classList.add("hidden");
+  document.getElementById("tracker-section").classList.remove("hidden");
+  
+  window.USER_EMAIL = payload.email; // store for backend
+}
+
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  return JSON.parse(atob(base64));
+}
+
+window.onload = () => {
+  google.accounts.id.initialize({
+    client_id: "YOUR_CLIENT_ID_HERE",
+    callback: handleCredentialResponse
+  });
+  google.accounts.id.renderButton(
+    document.querySelector(".g_id_signin"),
+    { theme: "outline", size: "large" }
+  );
+  google.accounts.id.prompt(); // shows the One Tap prompt
+};
+
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec";
 const tableBody = document.querySelector("#records-table tbody");
 const totalPayElem = document.getElementById("total-pay");
@@ -17,7 +46,7 @@ document.getElementById("add-entry").addEventListener("click", () => {
 
   const expectedPay = ((hours / 4.5) * rate).toFixed(2);
 
-  const record = { date, hours, rate, expectedPay: parseFloat(expectedPay) };
+  const record = { date, hours, rate, expectedPay: parseFloat(expectedPay), email: window.USER_EMAIL };
   records.push(record);
   renderTable();
   // Send to backend
@@ -92,4 +121,5 @@ function drawChart() {
     }
   });
 }
+
 
