@@ -11,9 +11,21 @@
     <h1>Pay Tracker</h1>
 
     <div id="login-section">
-      <button id="login-button">Sign in with Google</button>
-      <p id="user-email"></p>
-    </div>
+  <div id="g_id_onload"
+       data-client_id="1014062596044-qdr8ha0hu0mjtsh9eqm65eetmhjonnhn.apps.googleusercontent.com"
+       data-login_uri="https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-size="large"
+       data-theme="outline"
+       data-text="sign_in_with"
+       data-shape="rectangular"
+       data-logo_alignment="left">
+  </div>
+</div>
 
     <div id="tracker-section" class="hidden">
       <h2>Log Work</h2>
@@ -49,6 +61,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="script.js"></script>
 </body>
+
 </html>
