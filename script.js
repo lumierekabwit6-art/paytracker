@@ -41,11 +41,12 @@ document.getElementById("add-entry").addEventListener("click", () => {
   .catch(err => console.error("Error:", err));
 });
 
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec";
 const tableBody = document.querySelector("#records-table tbody");
 const totalPayElem = document.getElementById("total-pay");
 const differenceMessage = document.getElementById("difference-message");
 const chartCanvas = document.getElementById("pay-chart");
+
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx9YGhkoKSwAKLs-MDn6aV3ZSLzuJERndO1uhx1HC4UJPdtaY3BJKCRhzZZF4BR0UHj/exec";
 
 document.getElementById("add-entry").addEventListener("click", () => {
   const date = document.getElementById("work-date").value;
@@ -134,6 +135,7 @@ function drawChart() {
     }
   });
 }
+
 
 
 
